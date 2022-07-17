@@ -3,7 +3,7 @@
 
 
 
-
+const productId = new URL(window.location.href).searchParams.get("id")
 
 const productPage = {
     init : function(){
@@ -55,9 +55,46 @@ const productPage = {
             coloOption.textContent = products.colors[i]
             coloContainer.appendChild(coloOption)
 
-
         }
     }
+}
+
+
+const cartButton = document.getElementById("addToCart")
+
+cartButton.onclick = function() {
+
+    
+    const quantityInput = document.getElementById("quantity").value
+    const coloSelector = document.getElementById("colors").value
+
+
+    let cart = {
+        id : productId,
+        quantity : quantityInput,
+        colors : coloSelector
+    }
+    for(let i in cart){
+        const productAdded = cart[i]
+        if (productAdded.id & productAdded.colors === productId & coloSelector){
+            productAdded.quantity++
+        }
+        else{
+            cart = {
+                id : productId,
+                quantity : quantityInput,
+                colors : coloSelector
+            }
+        }
+    }
+
+
+
+
+    let cartString = JSON.stringify(cart);
+    localStorage.setItem("items",cartString);
+
+    console.log(cartString)
 }
 
 document.addEventListener("DOMContentLoaded", productPage.init);

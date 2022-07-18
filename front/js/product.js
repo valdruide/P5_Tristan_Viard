@@ -60,6 +60,8 @@ const productPage = {
 const cartButton = document.getElementById("addToCart")
 
 cartButton.onclick = function() {
+
+
     
     const quantityInput = document.getElementById("quantity").value
     const coloSelector = document.getElementById("colors").value
@@ -70,15 +72,20 @@ cartButton.onclick = function() {
     }
     var cartString = JSON.parse(localStorage.getItem("items")) || [];
 
+
+    let itemFind = cartString.find(cart => cart.id === productId);
+
     if(coloSelector == 0){
         alert("veuillez sélectioner une couleur")
     }else if(quantityInput == 0){
         alert("veuillez sélectioner une quantité")
-    }
-    else{
+    }else if(!itemFind){
         cartString.push(cart);
-        localStorage.setItem("items", JSON.stringify(cartString));
+    }else{
+        itemFind.quantity += quantityInput
+        cartString.splice(cartString.indexOf(itemFind), 1, itemFind); 
     }
+    localStorage.setItem("items", JSON.stringify(cartString));
     
     console.log(cart)
 }

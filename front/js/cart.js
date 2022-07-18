@@ -1,8 +1,8 @@
 
-let cartString = localStorage.getItem("items");
-let cartItems = JSON.parse(cartString);
 
-console.log(cartItems)
+let storageParsed = JSON.parse(localStorage.getItem("items"))
+
+console.log(storageParsed)
 
 const cartPage = {
     init : function(){
@@ -10,23 +10,23 @@ const cartPage = {
     },
     showList : async function() {
 
-        let id = (new URL(window.location).searchParams.get("id"));
         const cartSection = document.getElementById("cart__items")
 
-        for(let i in cartItems){
+        for(let element of storageParsed){
 
             
             const article = document.createElement("article")
             article.classList.add("cart__item")
-            article.setAttribute("data-id", cartItems.id)
-            article.setAttribute("data-color", cartItems.colors)
+            article.setAttribute("data-id", element.id)
+            article.setAttribute("data-color", element.colors)
             cartSection.appendChild(article)
-
-            console.log(article)
 
             const imgContainer = document.createElement("div")
             imgContainer.classList.add("cart__item__img")
             const imgItem = document.createElement("img")
+            imgItem.setAttribute("src", element.image)
+            console.log(imgItem)
+
             imgContainer.appendChild(imgItem)
             article.appendChild(imgContainer)
 
@@ -41,7 +41,7 @@ const cartPage = {
             const title = document.createElement("h2")
             title.innerText = "testTitle"
             const coloTxt = document.createElement("p")
-            coloTxt.innerText = cartItems.colors
+            coloTxt.innerText = element.colors
             const priceTxt = document.createElement("p")
             priceTxt.innerText = "testPrice"
             cartItemContentDesc.appendChild(title)
@@ -61,12 +61,12 @@ const cartPage = {
             cartItemContentSettingsQuantity.appendChild(qttyTxt)
 
             const inputQtty = document.createElement("input")
-            inputQtty.value = cartItems.quantity
+            inputQtty.value = element.quantity
             inputQtty.classList.add("itemQuantity")
             inputQtty.setAttribute("type", "number")
             inputQtty.setAttribute("min", "1")
             inputQtty.setAttribute("max", "100")
-            inputQtty.setAttribute("value", cartItems.quantity)
+            inputQtty.setAttribute("value", element.quantity)
             cartItemContentSettingsQuantity.appendChild(inputQtty)
 
             const deleteButonContainer = document.createElement("div")

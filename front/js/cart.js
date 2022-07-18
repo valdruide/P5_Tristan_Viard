@@ -10,10 +10,12 @@ const cartPage = {
     },
     showList : async function() {
 
+        let id = (new URL(window.location).searchParams.get("id"));
         const cartSection = document.getElementById("cart__items")
 
         for(let i in cartItems){
 
+            
             const article = document.createElement("article")
             article.classList.add("cart__item")
             article.setAttribute("data-id", cartItems.id)

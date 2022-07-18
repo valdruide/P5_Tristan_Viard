@@ -1,8 +1,6 @@
 
 
 
-
-
 const productId = new URL(window.location.href).searchParams.get("id")
 
 const productPage = {
@@ -11,7 +9,6 @@ const productPage = {
     },
     getProducts : async function() {
 
-        
 
         try {
 
@@ -63,38 +60,27 @@ const productPage = {
 const cartButton = document.getElementById("addToCart")
 
 cartButton.onclick = function() {
-
     
     const quantityInput = document.getElementById("quantity").value
     const coloSelector = document.getElementById("colors").value
-
-
     let cart = {
         id : productId,
         quantity : quantityInput,
         colors : coloSelector
     }
-    for(let i in cart){
-        const productAdded = cart[i]
-        if (productAdded.id & productAdded.colors === productId & coloSelector){
-            productAdded.quantity++
-        }
-        else{
-            cart = {
-                id : productId,
-                quantity : quantityInput,
-                colors : coloSelector
-            }
-        }
+    var cartString = JSON.parse(localStorage.getItem("items")) || [];
+
+    if(coloSelector == 0){
+        alert("veuillez sélectioner une couleur")
+    }else if(quantityInput == 0){
+        alert("veuillez sélectioner une quantité")
     }
-
-
-
-
-    let cartString = JSON.stringify(cart);
-    localStorage.setItem("items",cartString);
-
-    console.log(cartString)
+    else{
+        cartString.push(cart);
+        localStorage.setItem("items", JSON.stringify(cartString));
+    }
+    
+    console.log(cart)
 }
 
 document.addEventListener("DOMContentLoaded", productPage.init);

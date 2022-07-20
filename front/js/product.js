@@ -1,6 +1,6 @@
 
 
-const productId = new URL(window.location.href).searchParams.get("id")
+const productId = new URL(window.location.href).searchParams.get("id") 
 
 
 const productPage = {
@@ -39,7 +39,7 @@ const productPage = {
         }
     },
     printColors : function(products){
-        for (var i = 0; i < products.colors.length; i++) { 
+        for (let i = 0; i < products.colors.length; i++) { 
             const coloContainer = document.getElementById("colors")
             const coloOption = document.createElement("option")
             coloOption.setAttribute("value", products.colors[i])

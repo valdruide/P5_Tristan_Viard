@@ -2,6 +2,8 @@
 
 let storageParsed = JSON.parse(localStorage.getItem("items"))
 
+
+
 console.log(storageParsed)
 
 const cartPage = {
@@ -10,11 +12,12 @@ const cartPage = {
     },
     showList : async function() {
 
+        const res = await fetch("http://localhost:3000/api/products/")
+        const products =  await res.json()
         const cartSection = document.getElementById("cart__items")
 
         for(let element of storageParsed){
 
-            
             const article = document.createElement("article")
             article.classList.add("cart__item")
             article.setAttribute("data-id", element.id)
@@ -24,30 +27,34 @@ const cartPage = {
             const imgContainer = document.createElement("div")
             imgContainer.classList.add("cart__item__img")
             const imgItem = document.createElement("img")
-            imgItem.setAttribute("src", element.image)
-            console.log(imgItem)
-
             imgContainer.appendChild(imgItem)
             article.appendChild(imgContainer)
-
+            
             const cartItemContent = document.createElement("div")
             cartItemContent.classList.add("cart__item__content")
             article.appendChild(cartItemContent)
-
+            
             const cartItemContentDesc = document.createElement("div")
             cartItemContentDesc.classList.add("cart__item__content__description")
             cartItemContent.appendChild(cartItemContentDesc)
-
+            
             const title = document.createElement("h2")
-            title.innerText = "testTitle"
             const coloTxt = document.createElement("p")
-            coloTxt.innerText = element.colors
+            coloTxt.innerText = "Couleur: "+ element.colors
             const priceTxt = document.createElement("p")
-            priceTxt.innerText = "testPrice"
             cartItemContentDesc.appendChild(title)
             cartItemContentDesc.appendChild(coloTxt)
             cartItemContentDesc.appendChild(priceTxt)
-
+            for (product of products){
+                for (let i = 0; i < storageParsed.length; i++){
+                    if(element.id == product._id){
+                        imgItem.setAttribute("src", product.imageUrl)
+                        title.innerText = product.name
+                        priceTxt.innerText = Number(product.price) + "€"
+                    }
+                }
+            }
+            
             const cartItemContentSettings = document.createElement("div")
             cartItemContentSettings.classList.add("cart__item__content__settings")
             cartItemContent.appendChild(cartItemContentSettings)
@@ -75,9 +82,22 @@ const cartPage = {
 
             const deleteButon = document.createElement("p")
             deleteButon.classList.add("deleteItem")
+            deleteButon.setAttribute("id", "deleteButon")
             deleteButon.innerText = "Supprimer"
             deleteButonContainer.appendChild(deleteButon)
         }
+        const deleteButon = document.querySelectorAll('.deleteItem')
+        for (i = 0; i < deleteButon.length; i++) {
+            deleteButon[i].addEventListener('click', function() {
+                console.log("le bouton suppr marche")
+                
+                let index = storageParsed.findIndex(id => storageParsed.id == id);
+                
+                storageParsed.splice(index, 1);
+                localStorage.setItem("items", JSON.stringify(storageParsed));
+                location.reload();
+            })
+          }
     
     }
 }

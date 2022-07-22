@@ -23,7 +23,7 @@ const cartPage = {
             article.setAttribute("data-id", element.id)
             article.setAttribute("data-color", element.colors)
             cartSection.appendChild(article)
-
+            
             const imgContainer = document.createElement("div")
             imgContainer.classList.add("cart__item__img")
             const imgItem = document.createElement("img")
@@ -61,6 +61,7 @@ const cartPage = {
 
             const cartItemContentSettingsQuantity = document.createElement("div")
             cartItemContentSettingsQuantity.classList.add("cart__item__content__settings__quantity")
+            cartItemContentSettingsQuantity.setAttribute("productid", element.id)
             cartItemContentSettings.appendChild(cartItemContentSettingsQuantity)
 
             const qttyTxt = document.createElement("p")
@@ -83,22 +84,55 @@ const cartPage = {
             const deleteButon = document.createElement("p")
             deleteButon.classList.add("deleteItem")
             deleteButon.setAttribute("id", "deleteButon")
+            deleteButon.setAttribute("productid", element.id)
             deleteButon.innerText = "Supprimer"
             deleteButonContainer.appendChild(deleteButon)
         }
         const deleteButon = document.querySelectorAll('.deleteItem')
         for (i = 0; i < deleteButon.length; i++) {
+            let getID = deleteButon[i].getAttribute("productid")
             deleteButon[i].addEventListener('click', function() {
                 console.log("le bouton suppr marche")
-                
-                let index = storageParsed.findIndex(id => storageParsed.id == id);
-                
+                console.log(getID)
+                let index = storageParsed.findIndex(x => x.id == getID);
+                console.log(index)
+
                 storageParsed.splice(index, 1);
                 localStorage.setItem("items", JSON.stringify(storageParsed));
                 location.reload();
             })
           }
-    
+          const qttyInput = document.querySelectorAll('.itemQuantity')
+          for(let i = 0; i < qttyInput.length; i++){
+              qttyInput[i].addEventListener('change', function() {
+                let getInput = Number(qttyInput[i].value)
+                const r1 = qttyInput[i].closest('.cart__item__content__settings__quantity')
+                let getID = r1.getAttribute("productid")
+
+                for(const element of storageParsed){
+                    if(element.id == getID){
+                        let numberQttyInput = getInput
+                        element.quantity = numberQttyInput
+                        localStorage.setItem("items", JSON.stringify(storageParsed));
+                    }
+                }
+            })
+          }
+          const totalArticleTxt = document.getElementById("totalQuantity")
+          totalArticleTxt.innerText = storageParsed.length
+
+          const totalPriceTxt = document.getElementById("totalPrice")
+          let qtty = document.getElementsByClassName("itemQuantity")
+
+          console.log(qtty.value )
+
+            for(product of products){
+                for (let i = 0; i < storageParsed.length; i++){
+                    totalPriceTxt.innerText = product.price * qtty
+                    
+                }
+            }
+          
     }
 }
 

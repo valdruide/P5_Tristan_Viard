@@ -2,6 +2,33 @@
 
 let storageParsed = JSON.parse(localStorage.getItem("items"))
 
+const reducer = (accumulator, currentValue) => accumulator + currentValue;
+function totalPrice(){
+    let priceArray = []
+    const asyncForPrice = storageParsed.map(async(element) => {
+        const productID = element.id
+        const apiPrice = await fetch("http://localhost:3000/api/products/" + productID).then(res => res.json())
+        const productPrice = apiPrice.price
+        const pricePerKanap = productPrice * element.quantity
+        priceArray.push(pricePerKanap)
+        const totalPriceNumber = await priceArray.reduce(reducer, 0)
+        const totalPriceTxt = document.getElementById("totalPrice")
+        totalPriceTxt.innerText = totalPriceNumber
+    })
+}
+function totalQtty(){
+    let qttyArray = []
+    const totalQttyInput = document.querySelectorAll('itemQuantity')
+    for(element of storageParsed){
+        const eachQttyOfStorage = parseInt(element.quantity)
+        qttyArray.push(eachQttyOfStorage)
+    }
+    const totalQttyCalc = qttyArray.reduce(reducer, 0)
+    const totalQttyTxt = document.getElementById("totalQuantity")
+    totalQttyTxt.innerText = totalQttyCalc
+}
+
+
 
 
 console.log(storageParsed)
@@ -9,6 +36,8 @@ console.log(storageParsed)
 const cartPage = {
     init : function(){
         cartPage.showList()
+        totalPrice()
+        totalQtty()
     },
     showList : async function() {
 
@@ -99,7 +128,9 @@ const cartPage = {
 
                 storageParsed.splice(index, 1);
                 localStorage.setItem("items", JSON.stringify(storageParsed));
-                location.reload();
+                location.reload(); //penser à rappeler le localstorage plutot que de recharger la page
+                totalPrice()
+                totalQtty()
             })
           }
           const qttyInput = document.querySelectorAll('.itemQuantity')
@@ -114,26 +145,17 @@ const cartPage = {
                         let numberQttyInput = getInput
                         element.quantity = numberQttyInput
                         localStorage.setItem("items", JSON.stringify(storageParsed));
+                        totalPrice()
+                        totalQtty()
                     }
                 }
             })
           }
-          const totalArticleTxt = document.getElementById("totalQuantity")
-          totalArticleTxt.innerText = storageParsed.length
-
-          const totalPriceTxt = document.getElementById("totalPrice")
-          let qtty = document.getElementsByClassName("itemQuantity")
-
-          console.log(qtty.value )
-
-            for(product of products){
-                for (let i = 0; i < storageParsed.length; i++){
-                    totalPriceTxt.innerText = product.price * qtty
-                    
-                }
-            }
           
-    }
+
+          }
+          
+    
 }
 
 document.addEventListener("DOMContentLoaded", cartPage.init);

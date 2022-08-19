@@ -29,9 +29,67 @@ function totalQtty(){
 }
 
 
+const inputName = document.getElementById("firstName")
+const inputLastName = document.getElementById("lastName")
+const inputAdress = document.getElementById("address")
+const inputCity = document.getElementById("city")
+const inputMail = document.getElementById("email")
+const ButtonSubmit = document.getElementById("order")
 
+const firstNameErrorMsg = document.getElementById("firstNameErrorMsg")
+const lastNameErrorMsg = document.getElementById("lastNameErrorMsg")
+const addressErrorMsg = document.getElementById("addressErrorMsg")
+const cityErrorMsg = document.getElementById("cityErrorMsg")
+const emailErrorMsg = document.getElementById("emailErrorMsg")
 
-console.log(storageParsed)
+inputName.setAttribute("pattern", "[A-Za-z]{1,32}")
+inputLastName.setAttribute("pattern", "[A-Za-z]{1,32}")
+inputAdress.setAttribute("pattern", '[A-Za-z0-9\\s]{1,50}')
+inputCity.setAttribute("pattern", '[A-Za-z]{1,32}')
+inputMail.setAttribute("pattern", '^\\w.+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$')
+
+inputName.addEventListener("input", function() {
+    if(inputName.validity.valid){
+        firstNameErrorMsg.innerText = ""
+    } else {
+        firstNameErrorMsg.innerText = "Vous avez entré des caractères invalides. Veuillez n'entrer que des lettres"
+    }
+})
+
+inputLastName.addEventListener("input", function() {
+    if(inputLastName.validity.valid){
+        lastNameErrorMsg.innerText = ""
+    } else {
+        lastNameErrorMsg.innerText = "Vous avez entré des caractères invalides. Veuillez n'entrer que des lettres"
+    }
+})
+
+inputAdress.addEventListener("input", function() {
+    if(inputAdress.validity.valid){
+        addressErrorMsg.innerText = ""
+    } else {
+        addressErrorMsg.innerText = "Vous avez entré des caractères invalides. Veuillez n'entrer que des lettres et des chiffres"
+    }
+})
+
+inputCity.addEventListener("input", function() {
+    if(inputCity.validity.valid){
+        cityErrorMsg.innerText = ""
+    } else {
+        cityErrorMsg.innerText = "Vous avez entré des caractères invalides. Veuillez n'entrer que des lettres"
+    }
+})
+
+inputMail.addEventListener("change", function() {
+    if(inputMail.validity.valid){
+        emailErrorMsg.innerText = ""
+        console.log('valid');
+    } else {
+        emailErrorMsg.innerText = "Adresse email invalide. Veuillez vérifier votre email"
+        console.log('error');
+    }
+})
+
 
 const cartPage = {
     init : function(){
@@ -128,7 +186,7 @@ const cartPage = {
 
                 storageParsed.splice(index, 1);
                 localStorage.setItem("items", JSON.stringify(storageParsed));
-                location.reload(); //penser à rappeler le localstorage plutot que de recharger la page
+                location.reload();
                 totalPrice()
                 totalQtty()
             })
@@ -151,9 +209,8 @@ const cartPage = {
                 }
             })
           }
-          
-
-          }
+        
+        }
           
     
 }

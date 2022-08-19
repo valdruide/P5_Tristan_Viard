@@ -90,6 +90,46 @@ inputMail.addEventListener("change", function() {
     }
 })
 
+const products = storageParsed.map(product => product.id)
+const orderButton = document.getElementById("order")
+
+orderButton.addEventListener("click", async function(e) {
+    e.preventDefault()
+    const contact = {
+        firstName : inputName.value,
+        lastName : inputLastName.value,
+        address : inputAdress.value,
+        city : inputCity.value,
+        email : inputMail.value
+    }
+    console.log(contact)
+    try{
+        if(inputName.validity.valid && inputLastName.validity.valid && inputAdress.validity.valid && inputCity.validity.valid && inputMail.validity.valid){
+            fetch("http://localhost:3000/api/products/order", {
+                method : 'POST',
+                headers : {
+                    "Accept": "application/json",
+                    'Content-Type': 'application/json'
+                },
+                body : JSON.stringify({contact, products})
+            })
+            .then(response => response.json())
+            .then(data => window.open(`./confirmation.html?order=${data.orderId}`))
+            let l = []
+            l.push(contact)
+            localStorage.setItem("contact", JSON.stringify(l))
+        } else {
+            alert("Le formulaire est invalide.")
+        }
+        
+        
+        
+    } catch (error) {
+        console.log(error);
+    }
+    
+})
+
 
 const cartPage = {
     init : function(){

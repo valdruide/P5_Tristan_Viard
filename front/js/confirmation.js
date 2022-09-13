@@ -57,7 +57,7 @@ async function orderID(){
     const div2 = document.createElement("div")
     div2.appendChild(titre2)
     div2.style.display = "flex"
-    div2.style.justifyContent = "space-evenly"
+    div2.style.flexWrap = "wrap"
     div2.style.marginBottom = "100px"
     
     orderContainer.appendChild(titre2)
@@ -72,6 +72,7 @@ async function orderID(){
         div2.appendChild(img)
         img.style.width = "30%"
         img.style.borderRadius = "25px"
+        img.style.margin = "10px 10px 10px 10px"
         for (product of products){
             for (let i = 0; i < storageParsed2.length; i++){
                 if(element.id == product._id){
@@ -82,6 +83,4 @@ async function orderID(){
     }
 
     
-
-
 }

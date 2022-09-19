@@ -1,9 +1,9 @@
 
 
-let storageParsed = JSON.parse(localStorage.getItem("items"))
+let storageParsed = JSON.parse(localStorage.getItem("items")) //Récupère les infos dans le localStorage
 
 const reducer = (accumulator, currentValue) => accumulator + currentValue;
-function totalPrice(){
+function totalPrice(){ //Fais le calcul du prix total en fonction du nombre d'articles dans le panier
     let priceArray = []
     const asyncForPrice = storageParsed.map(async(element) => {
         const productID = element.id
@@ -16,7 +16,7 @@ function totalPrice(){
         totalPriceTxt.innerText = totalPriceNumber
     })
 }
-function totalQtty(){
+function totalQtty(){ // Calcule la quantité totale d'articles dans le panier
     let qttyArray = []
     const totalQttyInput = document.querySelectorAll('itemQuantity')
     for(element of storageParsed){
@@ -42,12 +42,17 @@ const addressErrorMsg = document.getElementById("addressErrorMsg")
 const cityErrorMsg = document.getElementById("cityErrorMsg")
 const emailErrorMsg = document.getElementById("emailErrorMsg")
 
+
+//Pattern REGEX
 inputName.setAttribute("pattern", "[A-Za-z]{1,32}")
 inputLastName.setAttribute("pattern", "[A-Za-z]{1,32}")
 inputAdress.setAttribute("pattern", '[A-Za-z0-9\\s]{1,50}')
 inputCity.setAttribute("pattern", '[A-Za-z]{1,32}')
 inputMail.setAttribute("pattern", '^\\w.+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$')
+//Pattern REGEX --End
 
+
+//Vérifie si les inputs correspondent aux patterns
 inputName.addEventListener("input", function() {
     if(inputName.validity.valid){
         firstNameErrorMsg.innerText = ""
@@ -89,13 +94,14 @@ inputMail.addEventListener("change", function() {
         console.log('error');
     }
 })
+//Vérifie si les inputs correspondent aux patterns --END
 
 const products = storageParsed.map(product => product.id)
 const orderButton = document.getElementById("order")
 
 orderButton.addEventListener("click", async function(e) {
     e.preventDefault()
-    const contact = {
+    const contact = { //Stoque les infos du contactForm
         firstName : inputName.value,
         lastName : inputLastName.value,
         address : inputAdress.value,
@@ -103,7 +109,7 @@ orderButton.addEventListener("click", async function(e) {
         email : inputMail.value
     }
     console.log(contact)
-    try{
+    try{ //Génère un numéro de commande unique
         if(inputName.validity.valid && inputLastName.validity.valid && inputAdress.validity.valid && inputCity.validity.valid && inputMail.validity.valid){
             fetch("http://localhost:3000/api/products/order", {
                 method : 'POST',
@@ -114,7 +120,7 @@ orderButton.addEventListener("click", async function(e) {
                 body : JSON.stringify({contact, products})
             })
             .then(response => response.json())
-            .then(data => window.open(`./confirmation.html?order=${data.orderId}`))
+            .then(data => window.open(`./confirmation.html?order=${data.orderId}`)) //Passe le numéro de commande dans l'URL
             let l = []
             l.push(contact)
             localStorage.setItem("contact", JSON.stringify(l))
@@ -137,7 +143,7 @@ const cartPage = {
         totalPrice()
         totalQtty()
     },
-    showList : async function() {
+    showList : async function() { //Construit l'HTML du panier avec tous les articles du localStorage
 
         const res = await fetch("http://localhost:3000/api/products/")
         const products =  await res.json()
@@ -172,7 +178,7 @@ const cartPage = {
             cartItemContentDesc.appendChild(title)
             cartItemContentDesc.appendChild(coloTxt)
             cartItemContentDesc.appendChild(priceTxt)
-            for (product of products){
+            for (product of products){ //Pour chaque articles du panier, récupère l'Image correspondante dans l'API
                 for (let i = 0; i < storageParsed.length; i++){
                     if(element.id == product._id){
                         imgItem.setAttribute("src", product.imageUrl)
@@ -216,7 +222,7 @@ const cartPage = {
             deleteButonContainer.appendChild(deleteButon)
         }
         const deleteButon = document.querySelectorAll('.deleteItem')
-        for (i = 0; i < deleteButon.length; i++) {
+        for (i = 0; i < deleteButon.length; i++) { //Supprime un produit du panier ET du localStorage
             let getID = deleteButon[i].getAttribute("productid")
             deleteButon[i].addEventListener('click', function() {
                 console.log("le bouton suppr marche")
@@ -232,7 +238,7 @@ const cartPage = {
             })
           }
           const qttyInput = document.querySelectorAll('.itemQuantity')
-          for(let i = 0; i < qttyInput.length; i++){
+          for(let i = 0; i < qttyInput.length; i++){ //Change la quantité
               qttyInput[i].addEventListener('change', function() {
                 let getInput = Number(qttyInput[i].value)
                 const r1 = qttyInput[i].closest('.cart__item__content__settings__quantity')

@@ -1,15 +1,15 @@
 
 
 
-let storageParsed = JSON.parse(localStorage.getItem("contact"))
-let storageParsed2 = JSON.parse(localStorage.getItem("items"))
+let storageParsed = JSON.parse(localStorage.getItem("contact")) //Récupère les infos de contact dans le localStorage
+let storageParsed2 = JSON.parse(localStorage.getItem("items")) //Récupère les infos du panier dans le localStorage
 console.log(storageParsed);
 document.addEventListener("DOMContentLoaded", orderID());
 
 
 
-async function orderID(){
-    const urlOrderId = new URL(window.location.href).searchParams.get("order") 
+async function orderID(){  //Construit l'HTML de la page
+    const urlOrderId = new URL(window.location.href).searchParams.get("order")  //Récupère le numéro de commande dans l'URL
     const orderID = document.getElementById("orderId")
     const orderContainer = document.getElementById("limitedWidthBlock")
 
@@ -44,7 +44,7 @@ async function orderID(){
     div.style.maxWidth = "500px"
     div.style.margin = "0 auto 100px auto"
 
-    for (let element of storageParsed){
+    for (let element of storageParsed){ //Place les infos de contact dans l'HTML
         prenom.innerText = "Prénom: " + element.firstName
         nom.innerText = "Nom: " + element.lastName
         adress.innerText = "Adresse: " + element.address
@@ -67,7 +67,7 @@ async function orderID(){
     const res = await fetch("http://localhost:3000/api/products/")
     const products =  await res.json()
 
-    for(let element of storageParsed2){
+    for(let element of storageParsed2){ //Résume les canapés achetés
         const img = document.createElement("img")
         div2.appendChild(img)
         img.style.width = "30%"
